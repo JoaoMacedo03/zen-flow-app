@@ -1,0 +1,60 @@
+name: Publish Zendesk Application
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ZENDESK_SUBDOMAIN: ${{ secrets.ZENDESK_SUBDOMAIN }}
+  ZENDESK_EMAIL: ${{ secrets.ZENDESK_EMAIL }}
+  ZENDESK_API_TOKEN: ${{ secrets.ZENDESK_API_TOKEN }}
+  ZENDESK_APP_ID: ${{ vars.ZENDESK_APP_ID }}
+  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Setup SSH Keys and known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+
+      - name: Install Node Modules
+        run: npm ci
+
+      - name: NPM Audit
+        run: npx audit-ci
+
+      - name: Run Tests and Linting
+        run: npm test
+
+      - name: Build
+        run: |
+          npm i @zendesk/zcli -g
+          npm run build
+    
+      - name: Publish Zendesk APP
+        run: |
+          cp -r zendesk/assets/* dist/assets
+          cp -r zendesk/translations dist
+          cp zendesk/manifest.json dist
+          mv dist/index.html dist/assets/index.html
+          sed -i 's/http\:\/\/localhost\:[0-9]\+/assets\/index.html/g' dist/manifest.json
+          sed -i 's/\/assets\//\.\//g' dist/assets/index.html
+          sed -i 's/url.\//url(/g' dist/assets/*.css
+          node scripts/publish.js

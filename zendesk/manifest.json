@@ -1,0 +1,52 @@
+{
+  "name": "Zen Flow App",
+  "author": {
+    "name": "AktieNow",
+    "email": "suporte@aktienow.com",
+    "url": "https://www.aktienow.com"
+  },
+  "location": {
+    "support": {
+      "new_ticket_sidebar": "http://localhost:8080?type=sidebar",
+      "ticket_sidebar": "http://localhost:8080?type=sidebar",
+      "nav_bar": "http://localhost:8080?type=navbar"
+    }
+  },
+  "private": true,
+  "defaultLocale": "en",
+  "version": "0.3.0",
+  "parameters": [
+    {
+      "name": "Repo name: zen-flow-app",
+      "required": false,
+      "type": "checkbox",
+      "default": ""
+    },
+    {
+      "name": "language",
+      "required": true,
+      "default": "pt"
+    },
+    {
+      "name": "repo_description_id",
+      "required": true,
+      "default": "8146039591699"
+    },
+    {
+      "name": "repo_language_id",
+      "required": true,
+      "default": "8146034435219"
+    },
+    {
+      "name": "base_url",
+      "required": true,
+      "default": "https://api.github.com"
+    },
+    {
+      "name": "github_base_url",
+      "required": true,
+      "default": "https://api.github.com"
+    }
+  ],
+  "frameworkVersion": "2.0"
+}
