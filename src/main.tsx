@@ -19,7 +19,6 @@ client.on('app.registered', async (data: { context: any; metadata: any }) => {
   }
 
   ReactDOM.createRoot(root).render(
-    <React.StrictMode>
       <ZendeskProvider>
         <MainApp
           zendesk={client}
@@ -27,6 +26,5 @@ client.on('app.registered', async (data: { context: any; metadata: any }) => {
           location={data.context.location}
         />
       </ZendeskProvider>
-    </React.StrictMode>
   );
 });
