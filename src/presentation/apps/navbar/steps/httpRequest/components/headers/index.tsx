@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -7,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Icon from '@mdi/react';
 import { mdiPlus, mdiDelete } from '@mdi/js';
+import useHeadearsHttp from './useHeadearsHttp';
 
 interface IOptions {
     onChange: (value: { [n: string]: string | number | null } ) => void;
@@ -14,38 +14,7 @@ interface IOptions {
 }
 
 export default function HeadearsHttp({ onChange, value }: IOptions) {
-  const [headers, setHeaders] = React.useState<{ [n: string]: string | number | null }>({});
-  const [valueKey, setValueKey] = React.useState<string | number | null>(null);
-  const [key, setKey] = React.useState<string>('');
-
-  const addHeader = () => {
-    setHeaders((obj) => ({ ...obj, [key]: valueKey }))
-  }
-
-  const deleteHeader = (newKey: string) => {
-    const data: { [n: string]: string | number | null  } = {};
-    for (const header of Object.keys(headers)) {
-        if (newKey !== header) data[header] = headers[header] as string | number | null;
-    }
-
-    setHeaders(data);
-  }
-
-  const handleValue = (data: string | number | null) => {
-    setValueKey(data);
-  }
-
-  const handleKey = (data: string) => {
-    setKey(data)
-  }
-
-  React.useEffect(() => {
-    onChange(headers);
-  }, [headers])
-
-  React.useEffect(() => {
-    setHeaders(value || {});
-  }, [])
+  const { handleValue, handleKey, deleteHeader, addHeader, headers, valueKey, key } = useHeadearsHttp({ onChange, value });
 
   return (
     <Box sx={{ width: '100%', bgcolor: 'background.paper', m:0 }}>
@@ -86,7 +55,7 @@ export default function HeadearsHttp({ onChange, value }: IOptions) {
                             <TextField id="outlined-basic" label="Valor" variant="outlined" size="small" fullWidth value={valueKey} onChange={({ target:{ value:  newValue} }) => handleValue(newValue)}/>
                         </Grid>
                         <Grid item xs={1}>
-                           <Button onClick={() => addHeader()}><Icon path={mdiPlus} size={1} /></Button>
+                           <Button disabled={!key} onClick={() => addHeader()}><Icon path={mdiPlus} size={1} /></Button>
                         </Grid>
                     </Grid>
                 </Box>

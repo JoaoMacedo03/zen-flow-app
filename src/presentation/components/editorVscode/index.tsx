@@ -10,16 +10,16 @@ export default function EditorVscode({ label, onChange, value }: { value: any; l
   return (
     <>
         <Box sx={{ my: 0, mx: 0 }}>
-        <Grid container alignItems="center">
-            <Grid item xs>
-            <Typography gutterBottom variant="h6" component="div">
-                {label}
-            </Typography>
-            </Grid>
-        </Grid>
+          <Grid container alignItems="center">
+              <Grid item xs>
+              <Typography gutterBottom variant="h6" component="div">
+                  {label}
+              </Typography>
+              </Grid>
+          </Grid>
         </Box>
         <Divider sx={{ marginBottom: 2}} />
-        <Editor height="95%" defaultLanguage="json"  defaultValue={value} onChange={handleEditorChange} />
+        <Editor height="95%" defaultLanguage="json"  defaultValue={value} onChange={handleEditorChange}  options={{ minimap: { enabled: false }}}/>
     </>
   );
 }
